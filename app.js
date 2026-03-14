@@ -3,7 +3,7 @@
   const ApiService = window.ApiService;
   const ScoringEngine = window.ScoringEngine;
   const CFG = window.APP_CONFIG || {};
-  const HOURS_TO_SHOW = CFG.HOURS_TO_SHOW || 24;
+  const HOURS_TO_SHOW = CFG.HOURS_TO_SHOW || 18;
 
   const state = {
     aemetPayload: null,
@@ -170,7 +170,7 @@
   function render() {
     const filtered = applyFilters([...state.enriched]);
     renderStats(state.enriched);
-    renderRanking([...state.enriched].sort((a, b) => b.score - a.score).slice(0, 5));
+    renderRanking([...state.enriched].sort((a, b) => b.score - a.score).slice(0, 6));
     renderCards(filtered);
   }
 
@@ -208,37 +208,24 @@
       const node = els.tpl.content.firstElementChild.cloneNode(true);
 
       node.querySelector(".js-name").textContent = item.name;
-      node.querySelector(".js-meta").textContent =
-        `${item.province} · ${item.sports.map(labelSport).join(" · ")}`;
+      node.querySelector(".js-meta").textContent = `${item.province} · ${item.sports.map(labelSport).join(" · ")}`;
 
       const badge = node.querySelector(".js-score");
       badge.textContent = `${item.score} · ${item.scoreLabel}`;
       badge.classList.add(`badge--${item.scoreClass}`);
 
-      node.querySelector(".js-wave").textContent =
-        item.current?.waveHeight != null ? `${item.current.waveHeight.toFixed(1)}m` : "-";
-
-      node.querySelector(".js-period").textContent =
-        item.current?.wavePeriod != null ? `${Math.round(item.current.wavePeriod)}s` : "-";
-
-      node.querySelector(".js-wind").textContent =
-        item.current?.windSpeed != null ? `${Math.round(item.current.windSpeed)} km/h` : "-";
-
-      node.querySelector(".js-gust").textContent =
-        item.current?.windGust != null ? `${Math.round(item.current.windGust)} km/h` : "-";
-
-      node.querySelector(".js-dir").textContent =
-        item.current?.windDirection != null ? ScoringEngine.degToCompass(item.current.windDirection) : "-";
-
-      node.querySelector(".js-water").textContent =
-        item.current?.seaTemp != null ? `${item.current.seaTemp.toFixed(1)}ºC` : "-";
+      node.querySelector(".js-wave").textContent = item.current?.waveHeight != null ? `${item.current.waveHeight.toFixed(1)}m` : "-";
+      node.querySelector(".js-period").textContent = item.current?.wavePeriod != null ? `${Math.round(item.current.wavePeriod)}s` : "-";
+      node.querySelector(".js-wind").textContent = item.current?.windSpeed != null ? `${Math.round(item.current.windSpeed)}` : "-";
+      node.querySelector(".js-gust").textContent = item.current?.windGust != null ? `${Math.round(item.current.windGust)}` : "-";
+      node.querySelector(".js-dir").textContent = item.current?.windDirection != null ? ScoringEngine.degToCompass(item.current.windDirection) : "-";
+      node.querySelector(".js-water").textContent = item.current?.seaTemp != null ? `${item.current.seaTemp.toFixed(1)}º` : "-";
 
       node.querySelector(".js-window").textContent = item.windowText;
       node.querySelector(".js-ideal").textContent = item.ideal;
-      node.querySelector(".js-aemet").textContent = aemetText(item.aemet);
 
       const analysis = node.querySelector(".js-analysis");
-      item.analysis.concat(item.expert.notes).slice(0, 8).forEach(text => {
+      item.analysis.concat(item.expert.notes).slice(0, 7).forEach(text => {
         const li = document.createElement("li");
         li.textContent = text;
         analysis.appendChild(li);
@@ -250,7 +237,14 @@
       renderDaysTable(node.querySelector(".js-days-table tbody"), item.dailyScored.slice(0, 15));
       renderWebcams(node.querySelector(".js-webcams"), item.webcams);
 
-      bindTabs(node);
+      const aemetWrap = node.querySelector(".js-aemet-wrap");
+      const aemetText = getAemetText(item.aemet);
+      if (aemetText) {
+        node.querySelector(".js-aemet").textContent = aemetText;
+        aemetWrap.classList.remove("hidden");
+      }
+
+      bindAccordions(node);
       frag.appendChild(node);
     });
 
@@ -356,26 +350,22 @@
     });
   }
 
-  function bindTabs(card) {
-    const buttons = card.querySelectorAll(".tab-btn");
-    const panels = card.querySelectorAll(".tab-panel");
-
-    buttons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        const target = btn.dataset.tab;
-        buttons.forEach(b => b.classList.remove("active"));
-        panels.forEach(p => p.classList.remove("active"));
-        btn.classList.add("active");
-        card.querySelector(`[data-panel="${target}"]`).classList.add("active");
-      });
-    });
+  function getAemetText(aemet) {
+    if (!aemet) return "";
+    const nombre = aemet.nombre || "";
+    const estado = aemet.estadoCielo || aemet.prediccion?.dia?.[0]?.estadoCieloDescriptivo || "";
+    if (!nombre && !estado) return "";
+    return `${nombre}${estado ? " · " + estado : ""}`;
   }
 
-  function aemetText(aemet) {
-    if (!aemet) return "Sin apoyo AEMET para este spot.";
-    const nombre = aemet.nombre || "spot AEMET";
-    const cielo = aemet.estadoCielo || aemet.prediccion?.dia?.[0]?.estadoCieloDescriptivo || "dato disponible";
-    return `AEMET: ${nombre} · ${typeof cielo === "string" ? cielo : "dato disponible"}.`;
+  function bindAccordions(card) {
+    const accordions = card.querySelectorAll(".accordion");
+    accordions.forEach(acc => {
+      const btn = acc.querySelector(".accordion__btn");
+      btn.addEventListener("click", () => {
+        acc.classList.toggle("open");
+      });
+    });
   }
 
   function labelSport(s) {
