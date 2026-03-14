@@ -7,27 +7,9 @@ window.SPOTS = [
     featured: true,
     lat: 36.235,
     lon: -6.024,
-    ideal: "Swell W/NW 1.2-1.8m, periodo 13-15s, Levante flojo o moderado y baja subiendo.",
-    expert: {
-      waveDirections: ["W", "NW"],
-      windGood: ["E"],
-      windBad: ["W", "SW", "S"],
-      waveMin: 0.9,
-      waveOptimal: [1.2, 1.8],
-      periodMin: 10,
-      periodOptimal: [13, 15],
-      windMin: 5,
-      windMax: 32,
-      tideHint: "Mejor con marea baja subiendo.",
-      notes: [
-        "Beachbreak sensible a bancos.",
-        "Con periodo corto tiende a cerrar.",
-        "Con Levante bueno se vuelve más hueca."
-      ]
-    },
-    webcams: [
-      { title: "Webcam El Palmar · 9 Pies", url: "https://www.escueladesurf9pies.com/es/webcam-el-palmar" }
-    ]
+    ideal: "W/NW 1.2-1.8m, 13-15s, Levante flojo o moderado, baja subiendo.",
+    expert: { waveDirections:["W","NW"], windGood:["E"], windBad:["W","SW","S"], waveMin:0.9, waveOptimal:[1.2,1.8], periodMin:10, periodOptimal:[13,15], windMin:5, windMax:32, tideHint:"Baja subiendo.", notes:["Beachbreak sensible a bancos.","Con periodo corto tiende a cerrar.","Con Levante bueno se vuelve más hueca."] },
+    webcams:[{ title:"Webcam El Palmar · 9 Pies", url:"https://www.escueladesurf9pies.com/es/webcam-el-palmar" }]
   },
   {
     id: "yerbabuena",
@@ -38,112 +20,153 @@ window.SPOTS = [
     lat: 36.183,
     lon: -5.946,
     ideal: "W/SW 2-3m, 12-15s, Norte terral, baja-media.",
-    expert: {
-      waveDirections: ["W", "SW"],
-      windGood: ["N"],
-      windBad: ["W", "SW", "S"],
-      waveMin: 1.5,
-      waveOptimal: [2.0, 3.0],
-      periodMin: 12,
-      periodOptimal: [12, 15],
-      windMin: 4,
-      windMax: 25,
-      tideHint: "Baja-media; en alta pierde mucha calidad.",
-      notes: [
-        "Derecha larga y técnica.",
-        "Necesita energía seria.",
-        "Spot de nivel medio-alto."
-      ]
-    },
-    webcams: []
+    expert: { waveDirections:["W","SW"], windGood:["N"], windBad:["W","SW","S"], waveMin:1.5, waveOptimal:[2,3], periodMin:12, periodOptimal:[12,15], windMin:4, windMax:25, tideHint:"Baja-media.", notes:["Derecha larga y técnica.","Necesita energía seria.","Spot medio-alto."] },
+    webcams:[]
+  },
+  {
+    id: "los-canos",
+    name: "Los Caños de Meca",
+    province: "Cádiz",
+    sports: ["surf"],
+    featured: false,
+    lat: 36.185,
+    lon: -5.973,
+    ideal: "SW 1.5-2.5m, 12-15s, Levante terral.",
+    expert: { waveDirections:["SW","W"], windGood:["E"], windBad:["W","SW","S"], waveMin:0.8, waveOptimal:[1.5,2.5], periodMin:10, periodOptimal:[12,15], windMin:8, windMax:38, tideHint:"Baja-media.", notes:["Reef delicado.","Mejor con marea baja.","Puede dar tubos técnicos."] },
+    webcams:[]
+  },
+  {
+    id: "la-fontanilla",
+    name: "La Fontanilla",
+    province: "Cádiz",
+    sports: ["surf"],
+    featured: false,
+    lat: 36.273,
+    lon: -6.097,
+    ideal: "W/SW 1.2-1.5m, 12-14s, E o N.",
+    expert: { waveDirections:["W","SW"], windGood:["E","N"], windBad:["W","SW","S"], waveMin:0.7, waveOptimal:[1.2,1.5], periodMin:10, periodOptimal:[12,14], windMin:4, windMax:24, tideHint:"Media.", notes:["Menos masificada que El Palmar.","Puede ir ordenada.","Con vacía se pone rápida."] },
+    webcams:[]
+  },
+  {
+    id: "la-cortadura",
+    name: "La Cortadura",
+    province: "Cádiz",
+    sports: ["surf"],
+    featured: false,
+    lat: 36.485,
+    lon: -6.260,
+    ideal: "W fuerte fuera, mar filtrado dentro, media subiendo.",
+    expert: { waveDirections:["W","SW"], windGood:["E","SE"], windBad:["N","NW"], waveMin:1.0, waveOptimal:[1.0,1.5], periodMin:10, periodOptimal:[10,14], windMin:4, windMax:25, tideHint:"Media subiendo.", notes:["Spot refugio.","Cuando fuera sobra aquí ordena.","Evitar rebote raro en alta máxima."] },
+    webcams:[]
+  },
+  {
+    id: "la-victoria",
+    name: "La Victoria",
+    province: "Cádiz",
+    sports: ["surf"],
+    featured: false,
+    lat: 36.510,
+    lon: -6.280,
+    ideal: "W/SW sólido, N o NE terral.",
+    expert: { waveDirections:["W","SW"], windGood:["N","NE"], windBad:["W","SW","S"], waveMin:1.0, waveOptimal:[1.0,1.6], periodMin:10, periodOptimal:[10,14], windMin:4, windMax:24, tideHint:"Media.", notes:["Playa urbana muy útil.","Fondos nobles.","Buen spot escuela y días de entrada."] },
+    webcams:[{ title:"Skyline La Victoria", url:"https://www.skylinewebcams.com/fr/webcam/espana/andalucia/cadiz/playa-victoria.html" }]
+  },
+  {
+    id: "santa-maria-del-mar",
+    name: "Santa María del Mar",
+    province: "Cádiz",
+    sports: ["surf"],
+    featured: false,
+    lat: 36.525,
+    lon: -6.292,
+    ideal: "W/SW serio, Levante/Nordeste terral y baja subiendo.",
+    expert: { waveDirections:["W","SW"], windGood:["E","NE"], windBad:["W","SW","S"], waveMin:1.0, waveOptimal:[1.0,1.8], periodMin:10, periodOptimal:[10,14], windMin:5, windMax:30, tideHint:"Baja subiendo a media.", notes:["Spot urbano muy particular.","En alta el backwash la destroza.","Puede ponerse muy rápida."] },
+    webcams:[{ title:"Skyline Santa María del Mar", url:"https://www.skylinewebcams.com/es/webcam/espana/andalucia/cadiz/cadiz-santa-maria-del-mar.html" }]
+  },
+  {
+    id: "el-balneario",
+    name: "El Balneario",
+    province: "Cádiz",
+    sports: ["surf"],
+    featured: false,
+    lat: 36.060,
+    lon: -5.640,
+    ideal: "W/NW 1.5-2m, 10-12s, viento muy flojo.",
+    expert: { waveDirections:["W","NW"], windGood:["W","SW","N"], windBad:["E"], waveMin:1.0, waveOptimal:[1.5,2.0], periodMin:8, periodOptimal:[10,12], windMin:0, windMax:10, tideHint:"Baja.", notes:["Ola corta y técnica.","Spot delicado.","Levante malo aquí."] },
+    webcams:[]
+  },
+  {
+    id: "bolonia",
+    name: "Bolonia",
+    province: "Cádiz",
+    sports: ["surf"],
+    featured: false,
+    lat: 36.088,
+    lon: -5.775,
+    ideal: "W/NW 1.5-2.5m, E offshore, media.",
+    expert: { waveDirections:["W","NW"], windGood:["E"], windBad:["S","SW"], waveMin:1.0, waveOptimal:[1.5,2.5], periodMin:10, periodOptimal:[10,14], windMin:4, windMax:28, tideHint:"Media.", notes:["Playa virgen.","Muy bonita y menos saturada.","Con marea correcta mejora mucho."] },
+    webcams:[{ title:"Surf-Forecast Bolonia", url:"https://es.surf-forecast.com/breaks/Bolonia/webcams/latest" }]
   },
   {
     id: "los-lances",
     name: "Los Lances",
     province: "Cádiz",
-    sports: ["kitesurf", "windsurf"],
+    sports: ["kitesurf","windsurf"],
     featured: true,
     lat: 36.005,
     lon: -5.610,
-    ideal: "Poniente 15-25 kn side-on, mar ordenado y seguridad alta.",
-    expert: {
-      waveDirections: ["W", "SW", "NW"],
-      windGood: ["W", "SW"],
-      windBad: ["E"],
-      waveMin: 0.7,
-      waveOptimal: [1.0, 2.0],
-      periodMin: 7,
-      periodOptimal: [8, 12],
-      windMin: 28,
-      windMax: 46,
-      tideHint: "Revisar lagunas interiores con coeficiente alto.",
-      notes: [
-        "Top para freeride con Poniente.",
-        "Levante offshore y delicado.",
-        "Muy apto para direccional."
-      ]
-    },
-    webcams: [
-      { title: "Tarifa live", url: "https://www.youtube.com/embed/dx6jgEqsjBE?autoplay=0&rel=0" }
-    ]
+    ideal: "Poniente 15-25 kn side-on, mar ordenado.",
+    expert: { waveDirections:["W","SW","NW"], windGood:["W","SW"], windBad:["E"], waveMin:0.7, waveOptimal:[1.0,2.0], periodMin:7, periodOptimal:[8,12], windMin:28, windMax:46, tideHint:"Revisar lagunas con coeficiente.", notes:["Top freeride.","Levante muy delicado.","Gran spot para direccional."] },
+    webcams:[{ title:"Tarifa live", url:"https://www.youtube.com/embed/dx6jgEqsjBE?autoplay=0&rel=0" }]
   },
   {
     id: "valdevaqueros",
     name: "Valdevaqueros",
     province: "Cádiz",
-    sports: ["kitesurf", "windsurf", "wingfoil"],
+    sports: ["kitesurf","windsurf","wingfoil"],
     featured: true,
     lat: 36.075,
     lon: -5.595,
-    ideal: "Poniente side-on 18-25 kn o Levante estable asentado.",
-    expert: {
-      waveDirections: ["W", "SW", "E"],
-      windGood: ["W", "SW", "E"],
-      windBad: ["N"],
-      waveMin: 0.5,
-      waveOptimal: [0.8, 1.8],
-      periodMin: 6,
-      periodOptimal: [7, 10],
-      windMin: 30,
-      windMax: 65,
-      tideHint: "Muy tolerante con marea.",
-      notes: [
-        "Muy versátil por la forma de la bahía.",
-        "El Levante inicial suele ser más racheado.",
-        "Con Poniente térmico mejora mucho."
-      ]
-    },
-    webcams: [
-      { title: "Ozu Tarifa webcam", url: "https://www.kiteschool-ozutarifa.com/webcam-kitesurf-tarifa" }
-    ]
+    ideal: "Poniente 18-25 kn o Levante ya estabilizado.",
+    expert: { waveDirections:["W","SW","E"], windGood:["W","SW","E"], windBad:["N"], waveMin:0.5, waveOptimal:[0.8,1.8], periodMin:6, periodOptimal:[7,10], windMin:30, windMax:65, tideHint:"Muy tolerante.", notes:["Bahía muy versátil.","Levante inicial racheado.","Poniente térmico muy bueno."] },
+    webcams:[{ title:"Ozu Tarifa webcam", url:"https://www.kiteschool-ozutarifa.com/webcam-kitesurf-tarifa" }]
   },
   {
     id: "palmones",
     name: "Palmones",
     province: "Cádiz",
-    sports: ["kitesurf", "windsurf"],
+    sports: ["kitesurf","windsurf"],
     featured: false,
     lat: 36.170,
     lon: -5.430,
-    ideal: "Refugio con Levante fuerte y bajamar para agua muy plana.",
-    expert: {
-      waveDirections: ["E", "SE"],
-      windGood: ["E", "SE"],
-      windBad: ["W", "SW"],
-      waveMin: 0.2,
-      waveOptimal: [0.2, 0.8],
-      periodMin: 4,
-      periodOptimal: [4, 7],
-      windMin: 28,
-      windMax: 46,
-      tideHint: "Bajamar ideal.",
-      notes: [
-        "Refugio real para freestyle.",
-        "Muy seguro por ángulo de viento.",
-        "Poco interés puro de ola, mucho de control."
-      ]
-    },
-    webcams: []
+    ideal: "Refugio con Levante fuerte y bajamar.",
+    expert: { waveDirections:["E","SE"], windGood:["E","SE"], windBad:["W","SW"], waveMin:0.2, waveOptimal:[0.2,0.8], periodMin:4, periodOptimal:[4,7], windMin:28, windMax:46, tideHint:"Bajamar ideal.", notes:["Freestyle y control.","Refugio real.","Poco interés puro de ola."] },
+    webcams:[]
+  },
+
+  {
+    id: "el-chanquete",
+    name: "El Chanquete",
+    province: "Málaga",
+    sports: ["surf","sup"],
+    featured: true,
+    lat: 36.713,
+    lon: -4.342,
+    ideal: "SE 1-1.5m, 6-9s, Norte terral.",
+    expert: { waveDirections:["SE"], windGood:["N"], windBad:["E","SE","S"], waveMin:0.8, waveOptimal:[1.0,1.5], periodMin:6, periodOptimal:[6,9], windMin:4, windMax:22, tideHint:"Baja-media.", notes:["Longboard y volumen.","Spot urbano útil.","Con cruzado pierde."] },
+    webcams:[]
+  },
+  {
+    id: "los-alamos",
+    name: "Los Álamos",
+    province: "Málaga",
+    sports: ["surf","kitesurf"],
+    featured: true,
+    lat: 36.608,
+    lon: -4.508,
+    ideal: "Levante previo y luego N/NW o W limpio.",
+    expert: { waveDirections:["E","SE"], windGood:["N","NW","W"], windBad:["E","SE","S"], waveMin:0.7, waveOptimal:[1.2,1.5], periodMin:6, periodOptimal:[6,8], windMin:4, windMax:24, tideHint:"Media.", notes:["Muy resistente al viento.","Popular en Málaga.","Bueno para surf y bodyboard."] },
+    webcams:[]
   },
   {
     id: "cabopino",
@@ -153,25 +176,9 @@ window.SPOTS = [
     featured: true,
     lat: 36.481,
     lon: -4.752,
-    ideal: "E/SE 1.5-2m, 7-8s, Norte/NW terral y marea baja.",
-    expert: {
-      waveDirections: ["E", "SE"],
-      windGood: ["N", "NW"],
-      windBad: ["E", "SE", "S"],
-      waveMin: 1.0,
-      waveOptimal: [1.5, 2.0],
-      periodMin: 6,
-      periodOptimal: [7, 8],
-      windMin: 4,
-      windMax: 24,
-      tideHint: "La baja ayuda a conectar mejor la derecha.",
-      notes: [
-        "Derecha estética junto al espigón.",
-        "Necesita energía suficiente.",
-        "Muy buen spot cuando cuadra."
-      ]
-    },
-    webcams: []
+    ideal: "E/SE 1.5-2m, 7-8s, N/NW terral.",
+    expert: { waveDirections:["E","SE"], windGood:["N","NW"], windBad:["E","SE","S"], waveMin:1.0, waveOptimal:[1.5,2.0], periodMin:6, periodOptimal:[7,8], windMin:4, windMax:24, tideHint:"Baja.", notes:["Derecha muy estética.","Necesita energía.","Muy buen spot cuando cuadra."] },
+    webcams:[]
   },
   {
     id: "santa-amalia",
@@ -181,84 +188,180 @@ window.SPOTS = [
     featured: false,
     lat: 36.543,
     lon: -4.620,
-    ideal: "Levante con 1.2-1.5m, 7-8s y Norte/NW de tierra.",
-    expert: {
-      waveDirections: ["E", "SE"],
-      windGood: ["N", "NW"],
-      windBad: ["E", "SE", "S"],
-      waveMin: 0.8,
-      waveOptimal: [1.2, 1.5],
-      periodMin: 6,
-      periodOptimal: [7, 8],
-      windMin: 4,
-      windMax: 24,
-      tideHint: "Mejor baja-media.",
-      notes: [
-        "Sin terral se vuelve caótica.",
-        "Spot local importante en Fuengirola.",
-        "Necesita limpieza del viento."
-      ]
-    },
-    webcams: []
+    ideal: "Levante 1.2-1.5m y terral.",
+    expert: { waveDirections:["E","SE"], windGood:["N","NW"], windBad:["E","SE","S"], waveMin:0.8, waveOptimal:[1.2,1.5], periodMin:6, periodOptimal:[7,8], windMin:4, windMax:24, tideHint:"Baja-media.", notes:["Spot local importante.","Con terral mejora mucho.","Sin limpieza se vuelve caos."] },
+    webcams:[]
   },
   {
-    id: "el-chanquete",
-    name: "El Chanquete",
+    id: "bil-bil",
+    name: "Bil-Bil",
     province: "Málaga",
-    sports: ["surf", "sup"],
-    featured: true,
-    lat: 36.713,
-    lon: -4.342,
-    ideal: "Swell SE, 6-9s, Norte terral y marea baja-media.",
-    expert: {
-      waveDirections: ["SE"],
-      windGood: ["N"],
-      windBad: ["E", "SE", "S"],
-      waveMin: 0.8,
-      waveOptimal: [1.0, 1.5],
-      periodMin: 6,
-      periodOptimal: [6, 9],
-      windMin: 4,
-      windMax: 22,
-      tideHint: "Baja-media suele ir mejor.",
-      notes: [
-        "Muy apto para longboard y volumen.",
-        "Spot urbano útil cuando Málaga responde.",
-        "Con cruzado pierde bastante."
-      ]
-    },
-    webcams: []
+    sports: ["surf"],
+    featured: false,
+    lat: 36.595,
+    lon: -4.523,
+    ideal: "Levante y N/NW.",
+    expert: { waveDirections:["E","SE"], windGood:["N","NW"], windBad:["E","SE","S"], waveMin:0.8, waveOptimal:[1.2,1.5], periodMin:6, periodOptimal:[6,8], windMin:4, windMax:24, tideHint:"Media.", notes:["Refugio local.","Olas divertidas.","Muy de comunidad."] },
+    webcams:[]
   },
+  {
+    id: "malapesquera",
+    name: "Malapesquera",
+    province: "Málaga",
+    sports: ["surf"],
+    featured: false,
+    lat: 36.595,
+    lon: -4.523,
+    ideal: "Levante ordenado, terral.",
+    expert: { waveDirections:["E","SE"], windGood:["N","NW"], windBad:["E","SE"], waveMin:0.8, waveOptimal:[1.2,1.5], periodMin:6, periodOptimal:[6,8], windMin:4, windMax:24, tideHint:"Media.", notes:["Playa urbana.","Picos entretenidos.","Buena para distintos niveles."] },
+    webcams:[]
+  },
+  {
+    id: "los-boliches",
+    name: "Los Boliches",
+    province: "Málaga",
+    sports: ["surf"],
+    featured: false,
+    lat: 36.538,
+    lon: -4.620,
+    ideal: "Levante con algo de orden y viento de tierra.",
+    expert: { waveDirections:["E","SE"], windGood:["N","NW"], windBad:["E","SE"], waveMin:0.8, waveOptimal:[1.2,1.5], periodMin:6, periodOptimal:[6,8], windMin:4, windMax:24, tideHint:"Media.", notes:["Spot urbano clásico.","Comunidad local.","Útil en días de entrada."] },
+    webcams:[]
+  },
+  {
+    id: "benajarafe",
+    name: "Benajarafe",
+    province: "Málaga",
+    sports: ["surf"],
+    featured: false,
+    lat: 36.737,
+    lon: -4.210,
+    ideal: "E 1-1.5m, N terral, baja.",
+    expert: { waveDirections:["E"], windGood:["N"], windBad:["E","SE","S"], waveMin:0.6, waveOptimal:[1.0,1.5], periodMin:6, periodOptimal:[6,8], windMin:4, windMax:24, tideHint:"Baja.", notes:["Más expuesto que Málaga capital.","Puede coger tamaño serio.","Spot más potente."] },
+    webcams:[]
+  },
+  {
+    id: "playa-de-lagos",
+    name: "Playa de Lagos",
+    province: "Málaga",
+    sports: ["surf"],
+    featured: false,
+    lat: 36.767,
+    lon: -4.092,
+    ideal: "Levante útil y terral.",
+    expert: { waveDirections:["E"], windGood:["N"], windBad:["E","SE"], waveMin:0.6, waveOptimal:[1.0,1.5], periodMin:6, periodOptimal:[6,8], windMin:4, windMax:24, tideHint:"Media.", notes:["Semiurbana.","Algo menos concurrida.","Puede sorprender."] },
+    webcams:[]
+  },
+  {
+    id: "torre-del-mar",
+    name: "Torre del Mar",
+    province: "Málaga",
+    sports: ["surf"],
+    featured: false,
+    lat: 36.744,
+    lon: -4.095,
+    ideal: "Levante y N.",
+    expert: { waveDirections:["E"], windGood:["N"], windBad:["E","SE"], waveMin:0.6, waveOptimal:[1.0,1.5], periodMin:6, periodOptimal:[6,8], windMin:4, windMax:24, tideHint:"Media.", notes:["Spot urbano.","Muy de local.","Bueno en levantes."] },
+    webcams:[]
+  },
+  {
+    id: "rincon",
+    name: "Rincón de la Victoria",
+    province: "Málaga",
+    sports: ["surf"],
+    featured: false,
+    lat: 36.718,
+    lon: -4.277,
+    ideal: "Levante y terral.",
+    expert: { waveDirections:["E","SE"], windGood:["N","NW"], windBad:["E","SE"], waveMin:0.7, waveOptimal:[1.0,1.5], periodMin:6, periodOptimal:[6,8], windMin:4, windMax:24, tideHint:"Media.", notes:["Menos concurrido que capital.","Útil con Levante.","Spot para seguir."] },
+    webcams:[]
+  },
+  {
+    id: "san-pedro",
+    name: "San Pedro de Alcántara",
+    province: "Málaga",
+    sports: ["surf"],
+    featured: false,
+    lat: 36.421,
+    lon: -4.990,
+    ideal: "Levante con algo de periodo y N/NW.",
+    expert: { waveDirections:["E","SE"], windGood:["N","NW"], windBad:["E","SE"], waveMin:0.8, waveOptimal:[1.2,1.8], periodMin:6, periodOptimal:[6,8], windMin:4, windMax:24, tideHint:"Media.", notes:["Playa extensa.","Fondos nobles.","Buena para muchos niveles."] },
+    webcams:[]
+  },
+  {
+    id: "guadalmina",
+    name: "Guadalmina",
+    province: "Málaga",
+    sports: ["surf"],
+    featured: false,
+    lat: 36.468,
+    lon: -4.975,
+    ideal: "Levante útil y media.",
+    expert: { waveDirections:["E","SE"], windGood:["N","NW"], windBad:["E","SE"], waveMin:0.8, waveOptimal:[1.2,1.8], periodMin:6, periodOptimal:[6,8], windMin:4, windMax:24, tideHint:"Media.", notes:["Tranquilo.","Buen pico con levante.","Ambiente menos saturado."] },
+    webcams:[]
+  },
+  {
+    id: "guadalmansa",
+    name: "Guadalmansa",
+    province: "Málaga",
+    sports: ["kitesurf"],
+    featured: false,
+    lat: 36.468,
+    lon: -4.975,
+    ideal: "Poniente fuerte en invierno.",
+    expert: { waveDirections:["W","SW"], windGood:["W","SW"], windBad:["E"], waveMin:0.8, waveOptimal:[1.0,2.0], periodMin:6, periodOptimal:[6,9], windMin:28, windMax:50, tideHint:"Secundaria.", notes:["Spot de invierno.","Rampa y olas ordenadas.","Nivel medio-alto."] },
+    webcams:[]
+  },
+
   {
     id: "isla-canela",
     name: "Isla Canela",
     province: "Huelva",
-    sports: ["kitesurf", "wingfoil"],
+    sports: ["kitesurf","wingfoil"],
     featured: true,
-    lat: 37.180,
-    lon: -7.340,
-    ideal: "Poniente 15-22 kn y bajamar para lagunas y flat water.",
-    expert: {
-      waveDirections: ["W", "SW"],
-      windGood: ["W", "SW"],
-      windBad: ["N", "NE"],
-      waveMin: 0.3,
-      waveOptimal: [0.5, 1.5],
-      periodMin: 5,
-      periodOptimal: [6, 10],
-      windMin: 28,
-      windMax: 42,
-      tideHint: "Bajamar crítica para sacar partido real.",
-      notes: [
-        "Muy buena para freestyle.",
-        "Leer bancos de arena al llegar.",
-        "También útil para freeride."
-      ]
-    },
-    webcams: [
-      { title: "Isla Cristina / Playa Central", url: "https://www.windfinder.com/webcams/isla_cristina" }
-    ]
+    lat: 37.186,
+    lon: -7.403,
+    ideal: "Poniente 15-22 kn y bajamar.",
+    expert: { waveDirections:["W","SW"], windGood:["W","SW"], windBad:["N","NE"], waveMin:0.3, waveOptimal:[0.5,1.5], periodMin:5, periodOptimal:[6,10], windMin:28, windMax:42, tideHint:"Baja crítica.", notes:["Freestyle y freeride.","Lagunas con bajamar.","Buen spot de Huelva."] },
+    webcams:[{ title:"Windfinder Isla Cristina", url:"https://es.windfinder.com/webcams/isla_cristina_beach_spain" }]
   },
+  {
+    id: "punta-umbria",
+    name: "Punta Umbría",
+    province: "Huelva",
+    sports: ["kitesurf","surf"],
+    featured: false,
+    lat: 37.193,
+    lon: -6.965,
+    ideal: "Poniente estable o Norte terral para surf.",
+    expert: { waveDirections:["W","SW"], windGood:["W","SW","N"], windBad:["E","SE"], waveMin:0.8, waveOptimal:[1.0,1.8], periodMin:8, periodOptimal:[10,13], windMin:12, windMax:40, tideHint:"Leer zona concreta.", notes:["Varios spots dentro del mismo entorno.","Muy dependiente de zona.","Interesante por versatilidad."] },
+    webcams:[{ title:"Windfinder Punta Umbría", url:"https://es.windfinder.com/webcams/punta_umbria_spain" }]
+  },
+  {
+    id: "matalascanas",
+    name: "Matalascañas",
+    province: "Huelva",
+    sports: ["surf"],
+    featured: false,
+    lat: 37.000,
+    lon: -6.550,
+    ideal: "W/NW con periodo largo y N/NE terral.",
+    expert: { waveDirections:["W","NW"], windGood:["N","NE"], windBad:["W","SW"], waveMin:0.9, waveOptimal:[1.0,1.8], periodMin:12, periodOptimal:[13,16], windMin:4, windMax:24, tideHint:"Variable por bancos.", notes:["Fondos vírgenes.","Muy bueno para longboard.","Necesita energía seria."] },
+    webcams:[{ title:"Windfinder Matalascañas", url:"https://es.windfinder.com/webcams/matalascanas_spain" }]
+  },
+  {
+    id: "isla-cristina",
+    name: "Isla Cristina",
+    province: "Huelva",
+    sports: ["kitesurf"],
+    featured: false,
+    lat: 37.200,
+    lon: -7.320,
+    ideal: "Poniente bueno y lagunas.",
+    expert: { waveDirections:["W","SW"], windGood:["W","SW"], windBad:["E"], waveMin:0.3, waveOptimal:[0.5,1.5], periodMin:5, periodOptimal:[6,10], windMin:20, windMax:40, tideHint:"Bajamar útil.", notes:["Muy del entorno de Huelva oeste.","Freestyle potente.","Vigilar bancos."] },
+    webcams:[]
+  },
+
   {
     id: "punta-del-rio",
     name: "Punta del Río",
@@ -267,84 +370,57 @@ window.SPOTS = [
     featured: true,
     lat: 36.734,
     lon: -3.600,
-    ideal: "Poniente W/SW 0.8-1.5m, 6-8s y Norte canalizado.",
-    expert: {
-      waveDirections: ["W", "SW"],
-      windGood: ["N"],
-      windBad: ["S", "SE", "E"],
-      waveMin: 0.8,
-      waveOptimal: [0.8, 1.5],
-      periodMin: 5,
-      periodOptimal: [6, 8],
-      windMin: 4,
-      windMax: 26,
-      tideHint: "Suele ir mejor media subiendo.",
-      notes: [
-        "Uno de los mejores picos de la zona.",
-        "La entrada de energía suele ser buena.",
-        "Ojo a corrientes en desembocadura."
-      ]
-    },
-    webcams: []
+    ideal: "W/SW 0.8-1.5m, 6-8s, Norte canalizado.",
+    expert: { waveDirections:["W","SW"], windGood:["N"], windBad:["S","SE","E"], waveMin:0.8, waveOptimal:[0.8,1.5], periodMin:5, periodOptimal:[6,8], windMin:4, windMax:26, tideHint:"Media subiendo.", notes:["Gran pico de la zona.","Buen aporte de energía.","Ojo corrientes."] },
+    webcams:[]
   },
   {
     id: "playa-granada",
     name: "Playa Granada",
     province: "Granada",
-    sports: ["kitesurf", "windsurf", "wingfoil"],
+    sports: ["kitesurf","windsurf","wingfoil"],
     featured: false,
     lat: 36.708,
     lon: -3.550,
-    ideal: "Poniente 18-25 kn con mar activo y buen chopi.",
-    expert: {
-      waveDirections: ["W", "SW"],
-      windGood: ["W", "SW"],
-      windBad: ["E", "SE"],
-      waveMin: 0.6,
-      waveOptimal: [0.8, 1.8],
-      periodMin: 5,
-      periodOptimal: [6, 9],
-      windMin: 30,
-      windMax: 46,
-      tideHint: "Menos dependiente de marea que otros spots.",
-      notes: [
-        "Muy útil para saltos.",
-        "Se activa rápido.",
-        "Bueno para wind y kite."
-      ]
-    },
-    webcams: [
-      { title: "Wisuki Playa Granada", url: "https://es.wisuki.com/forecast/2706/playa-granada" }
-    ]
+    ideal: "Poniente 18-25 kn y mar activo.",
+    expert: { waveDirections:["W","SW"], windGood:["W","SW"], windBad:["E","SE"], waveMin:0.6, waveOptimal:[0.8,1.8], periodMin:5, periodOptimal:[6,9], windMin:30, windMax:46, tideHint:"Secundaria.", notes:["Bueno para saltos.","Útil para wind y kite.","Spot activo."] },
+    webcams:[{ title:"Wisuki Playa Granada", url:"https://es.wisuki.com/forecast/2706/playa-granada" }]
   },
+
   {
     id: "los-genoveses",
     name: "Los Genoveses",
     province: "Almería",
-    sports: ["surf", "kitesurf"],
+    sports: ["surf","kitesurf"],
     featured: true,
     lat: 36.765,
     lon: -2.104,
-    ideal: "Levante que deje mar y rolada posterior a Norte o Poniente.",
-    expert: {
-      waveDirections: ["E", "NE"],
-      windGood: ["N", "W"],
-      windBad: ["E", "SE", "S"],
-      waveMin: 1.0,
-      waveOptimal: [1.0, 2.0],
-      periodMin: 6,
-      periodOptimal: [7, 10],
-      windMin: 5,
-      windMax: 30,
-      tideHint: "Revisar restricciones y ángulo real de viento.",
-      notes: [
-        "Entorno natural regulado.",
-        "Muy sensible al viento local.",
-        "Puede dar mucha calidad."
-      ]
-    },
-    webcams: [
-      { title: "Forecast Los Genoveses", url: "https://www.todosurf.com/prevision/los-genoveses-spot52.htm" }
-    ]
+    ideal: "Levante que deje mar y rolada posterior.",
+    expert: { waveDirections:["E","NE"], windGood:["N","W"], windBad:["E","SE","S"], waveMin:1.0, waveOptimal:[1.0,2.0], periodMin:6, periodOptimal:[7,10], windMin:5, windMax:30, tideHint:"Leer ángulo real del viento.", notes:["Entorno natural regulado.","Muy sensible al viento local.","Puede dar calidad seria."] },
+    webcams:[{ title:"Todosurf Los Genoveses", url:"https://www.todosurf.com/prevision/los-genoveses-spot52.htm" }]
+  },
+  {
+    id: "el-zapillo",
+    name: "El Zapillo",
+    province: "Almería",
+    sports: ["surf","windsurf"],
+    featured: false,
+    lat: 36.827,
+    lon: -2.451,
+    ideal: "Levante con mar y terral posterior.",
+    expert: { waveDirections:["E","SE"], windGood:["W","NW","N"], windBad:["E","SE"], waveMin:0.8, waveOptimal:[1.0,1.8], periodMin:5, periodOptimal:[6,8], windMin:4, windMax:28, tideHint:"Menos crítica.", notes:["Spot urbano de Almería.","Útil cuando entra Levante.","Muy práctico para revisar rápido."] },
+    webcams:[]
+  },
+  {
+    id: "san-jose",
+    name: "San José",
+    province: "Almería",
+    sports: ["kitesurf","windsurf","sup"],
+    featured: false,
+    lat: 36.760,
+    lon: -2.109,
+    ideal: "Poniente con olas residuales o Levante controlado.",
+    expert: { waveDirections:["E","W"], windGood:["W","SW"], windBad:["E"], waveMin:0.5, waveOptimal:[0.8,2.0], periodMin:5, periodOptimal:[6,9], windMin:20, windMax:45, tideHint:"Secundaria.", notes:["Muy útil para wind y kite.","Condición variable.","Entorno muy atractivo."] },
+    webcams:[{ title:"Wisuki San José", url:"https://wisuki.com/spot/91-san-jose" }]
   }
 ];
