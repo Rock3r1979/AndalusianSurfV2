@@ -19,20 +19,35 @@
 
     if (dirMatches(hour.waveDirection, r.waveDirections)) score += 25;
     if (inRange(hour.waveHeight, r.waveOptimal[0], r.waveOptimal[1])) score += 25;
-    else if (hour.waveHeight >= r.waveMin) score += 12;
+    else if ((hour.waveHeight ?? 0) >= r.waveMin) score += 12;
 
     if (inRange(hour.wavePeriod, r.periodOptimal[0], r.periodOptimal[1])) score += 20;
-    else if (hour.wavePeriod >= r.periodMin) score += 10;
+    else if ((hour.wavePeriod ?? 0) >= r.periodMin) score += 10;
 
     if (dirMatches(hour.windDirection, r.windGood)) score += 20;
     else if (dirMatches(hour.windDirection, r.windBad)) score -= 10;
 
-    if (hour.windSpeed != null && hour.windSpeed >= r.windMin && hour.windSpeed <= r.windMax) {
+    if ((hour.windSpeed ?? -1) >= r.windMin && (hour.windSpeed ?? 999) <= r.windMax) {
       score += 10;
     }
 
-    score = Math.max(0, Math.min(100, score));
-    return score;
+    return Math.max(0, Math.min(100, score));
+  }
+
+  function scoreDay(spot, day) {
+    let score = 0;
+    const r = spot.expert;
+
+    if (dirMatches(day.waveDirectionDominant, r.waveDirections)) score += 25;
+    if (inRange(day.waveHeightMax, r.waveOptimal[0], r.waveOptimal[1])) score += 25;
+    else if ((day.waveHeightMax ?? 0) >= r.waveMin) score += 12;
+
+    if (inRange(day.wavePeriodMax, r.periodOptimal[0], r.periodOptimal[1])) score += 20;
+    else if ((day.wavePeriodMax ?? 0) >= r.periodMin) score += 10;
+
+    if ((day.windSpeedMax ?? -1) >= r.windMin && (day.windSpeedMax ?? 999) <= r.windMax) score += 10;
+
+    return Math.max(0, Math.min(100, score));
   }
 
   function classify(score) {
@@ -49,73 +64,90 @@
     });
   }
 
-  function buildAnalysis(spot, current) {
-    if (!current) return ["Sin datos actuales."];
-
-    const out = [];
-    out.push(`Ola actual ${current.waveHeight != null ? current.waveHeight.toFixed(1) + "m" : "-"}.`);
-    out.push(`Periodo actual ${current.wavePeriod != null ? Math.round(current.wavePeriod) + "s" : "-"}.`);
-    out.push(`Viento ${degToCompass(current.windDirection)} ${current.windSpeed != null ? Math.round(current.windSpeed) + " km/h" : "-"}.`);
-    out.push(`Marea orientativa: ${spot.expert.tideHint}`);
-    return out;
+  function formatDay(date) {
+    if (!date) return "-";
+    return new Date(date).toLocaleDateString("es-ES", {
+      weekday: "short",
+      day: "2-digit",
+      month: "2-digit"
+    });
   }
 
-  function computeBestWindow(spot, hourly) {
+  function bestWindow(spot, hourly) {
     if (!hourly?.length) return { text: "Sin forecast horario.", hours: [] };
 
-    const scoped = hourly.slice(0, 18).map(h => ({
+    const next = hourly.slice(0, 24).map(h => ({
       ...h,
       score: scoreHour(spot, h)
     }));
 
-    const top = scoped
-      .filter(h => h.score >= 58)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 6);
+    const good = next.filter(h => h.score >= 58);
 
-    if (!top.length) {
+    if (!good.length) {
       return {
-        text: "No aparece una ventana buena en las próximas horas.",
-        hours: scoped.slice(0, 6)
+        text: "No aparece una ventana buena en las próximas 24h.",
+        hours: next
       };
     }
 
-    const ordered = [...top].sort((a, b) => new Date(a.time) - new Date(b.time));
+    const first = good[0];
+    let last = good[0];
+    for (const h of good) {
+      if (new Date(h.time) >= new Date(last.time)) last = h;
+    }
+
     return {
-      text: `Mejor tramo estimado entre ${formatHour(ordered[0].time)} y ${formatHour(ordered[ordered.length - 1].time)}.`,
-      hours: top
+      text: `Mejor tramo estimado entre ${formatHour(first.time)} y ${formatHour(last.time)}.`,
+      hours: next
     };
   }
 
-  function summarizeSpot(spot, forecast) {
-    const current = forecast?.current || null;
-    const hourly = forecast?.hourly || [];
-    const currentScore = current ? scoreHour(spot, current) : 0;
-    const klass = classify(currentScore);
-    const window = computeBestWindow(spot, hourly);
+  function analysis(spot, current) {
+    if (!current) return ["Sin datos actuales."];
 
-    return {
-      current,
-      score: currentScore,
-      scoreLabel: klass.label,
-      scoreClass: klass.className,
-      analysis: buildAnalysis(spot, current),
-      windowText: window.text,
-      topHours: window.hours
-    };
+    return [
+      `Ola actual ${current.waveHeight != null ? current.waveHeight.toFixed(1) + "m" : "-"}.`,
+      `Periodo actual ${current.wavePeriod != null ? Math.round(current.wavePeriod) + "s" : "-"}.`,
+      `Viento ${degToCompass(current.windDirection)} ${current.windSpeed != null ? Math.round(current.windSpeed) + " km/h" : "-"}.`,
+      `Racha ${current.windGust != null ? Math.round(current.windGust) + " km/h" : "-"}.`,
+      `Temperatura del agua ${current.seaTemp != null ? current.seaTemp.toFixed(1) + "ºC" : "-"}.`,
+      `Marea orientativa: ${spot.expert.tideHint}`
+    ];
   }
 
   function aemetText(aemet) {
     if (!aemet) return "Sin apoyo AEMET para este spot.";
-    const estado = aemet.estadoCielo || aemet.prediccion?.dia?.[0]?.estadoCieloDescriptivo || "Dato disponible";
-    const viento = aemet.viento || aemet.prediccion?.dia?.[0]?.viento || "";
-    return `AEMET: ${typeof estado === "string" ? estado : "dato disponible"}${viento ? ` · viento ${JSON.stringify(viento)}` : ""}`;
+    const estado = aemet.estadoCielo || aemet.prediccion?.dia?.[0]?.estadoCieloDescriptivo || "dato disponible";
+    return `AEMET disponible: ${typeof estado === "string" ? estado : "dato disponible"}.`;
+  }
+
+  function summarizeSpot(spot, forecast) {
+    const current = forecast?.current || null;
+    const currentScore = current ? scoreHour(spot, current) : 0;
+    const cls = classify(currentScore);
+    const window = bestWindow(spot, forecast?.hourly || []);
+    const daily = (forecast?.daily || []).map(day => ({
+      ...day,
+      score: scoreDay(spot, day)
+    }));
+
+    return {
+      current,
+      score: currentScore,
+      scoreLabel: cls.label,
+      scoreClass: cls.className,
+      analysis: analysis(spot, current),
+      windowText: window.text,
+      hourlyScored: window.hours,
+      dailyScored: daily
+    };
   }
 
   window.ScoringEngine = {
     summarizeSpot,
-    formatHour,
     degToCompass,
-    aemetText
+    formatHour,
+    formatDay,
+    classify
   };
 })();
