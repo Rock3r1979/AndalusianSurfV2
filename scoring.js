@@ -27,16 +27,14 @@
     if (dirMatches(hour.windDirection, r.windGood)) score += 20;
     else if (dirMatches(hour.windDirection, r.windBad)) score -= 10;
 
-    if ((hour.windSpeed ?? -1) >= r.windMin && (hour.windSpeed ?? 999) <= r.windMax) {
-      score += 10;
-    }
+    if ((hour.windSpeed ?? -1) >= r.windMin && (hour.windSpeed ?? 999) <= r.windMax) score += 10;
 
     return Math.max(0, Math.min(100, score));
   }
 
   function scoreDay(spot, day) {
-    let score = 0;
     const r = spot.expert;
+    let score = 0;
 
     if (dirMatches(day.waveDirectionDominant, r.waveDirections)) score += 25;
     if (inRange(day.waveHeightMax, r.waveOptimal[0], r.waveOptimal[1])) score += 25;
@@ -76,7 +74,7 @@
   function bestWindow(spot, hourly) {
     if (!hourly?.length) return { text: "Sin forecast horario.", hours: [] };
 
-    const next = hourly.slice(0, 24).map(h => ({
+    const next = hourly.slice(0, 18).map(h => ({
       ...h,
       score: scoreHour(spot, h)
     }));
@@ -85,16 +83,13 @@
 
     if (!good.length) {
       return {
-        text: "No aparece una ventana buena en las próximas 24h.",
+        text: "No aparece una ventana buena en las próximas horas.",
         hours: next
       };
     }
 
     const first = good[0];
-    let last = good[0];
-    for (const h of good) {
-      if (new Date(h.time) >= new Date(last.time)) last = h;
-    }
+    const last = good[good.length - 1];
 
     return {
       text: `Mejor tramo estimado entre ${formatHour(first.time)} y ${formatHour(last.time)}.`,
@@ -103,22 +98,16 @@
   }
 
   function analysis(spot, current) {
-    if (!current) return ["Sin datos actuales."];
+    if (!current) return ["Sin datos actuales para este spot."];
 
     return [
-      `Ola actual ${current.waveHeight != null ? current.waveHeight.toFixed(1) + "m" : "-"}.`,
-      `Periodo actual ${current.wavePeriod != null ? Math.round(current.wavePeriod) + "s" : "-"}.`,
+      `Ola ${current.waveHeight != null ? current.waveHeight.toFixed(1) + "m" : "-"}.`,
+      `Periodo ${current.wavePeriod != null ? Math.round(current.wavePeriod) + "s" : "-"}.`,
       `Viento ${degToCompass(current.windDirection)} ${current.windSpeed != null ? Math.round(current.windSpeed) + " km/h" : "-"}.`,
       `Racha ${current.windGust != null ? Math.round(current.windGust) + " km/h" : "-"}.`,
-      `Temperatura del agua ${current.seaTemp != null ? current.seaTemp.toFixed(1) + "ºC" : "-"}.`,
+      `Agua ${current.seaTemp != null ? current.seaTemp.toFixed(1) + "ºC" : "-"}.`,
       `Marea orientativa: ${spot.expert.tideHint}`
     ];
-  }
-
-  function aemetText(aemet) {
-    if (!aemet) return "Sin apoyo AEMET para este spot.";
-    const estado = aemet.estadoCielo || aemet.prediccion?.dia?.[0]?.estadoCieloDescriptivo || "dato disponible";
-    return `AEMET disponible: ${typeof estado === "string" ? estado : "dato disponible"}.`;
   }
 
   function summarizeSpot(spot, forecast) {
@@ -147,7 +136,6 @@
     summarizeSpot,
     degToCompass,
     formatHour,
-    formatDay,
-    classify
+    formatDay
   };
 })();
