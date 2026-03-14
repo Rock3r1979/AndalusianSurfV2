@@ -7,7 +7,7 @@ window.SPOTS = [
     featured: true,
     lat: 36.235,
     lon: -6.024,
-    ideal: "Swell W/NW 1.2-1.8m, periodo 13-15s, Levante flojo o moderado, baja subiendo.",
+    ideal: "Swell W/NW 1.2-1.8m, periodo 13-15s, Levante flojo o moderado y baja subiendo.",
     expert: {
       waveDirections: ["W", "NW"],
       windGood: ["E"],
@@ -37,7 +37,7 @@ window.SPOTS = [
     featured: true,
     lat: 36.183,
     lon: -5.946,
-    ideal: "Mar W/SW 2-3m, 12-15s, Norte terral, baja-media.",
+    ideal: "W/SW 2-3m, 12-15s, Norte terral, baja-media.",
     expert: {
       waveDirections: ["W", "SW"],
       windGood: ["N"],
@@ -48,11 +48,11 @@ window.SPOTS = [
       periodOptimal: [12, 15],
       windMin: 4,
       windMax: 25,
-      tideHint: "Baja-media, en alta pierde mucha calidad.",
+      tideHint: "Baja-media; en alta pierde mucha calidad.",
       notes: [
         "Derecha larga y técnica.",
         "Necesita energía seria.",
-        "Spot medio-alto."
+        "Spot de nivel medio-alto."
       ]
     },
     webcams: []
@@ -65,7 +65,7 @@ window.SPOTS = [
     featured: true,
     lat: 36.005,
     lon: -5.610,
-    ideal: "Poniente 15-25 kn side-on, mar ordenado y mucha seguridad.",
+    ideal: "Poniente 15-25 kn side-on, mar ordenado y seguridad alta.",
     expert: {
       waveDirections: ["W", "SW", "NW"],
       windGood: ["W", "SW"],
@@ -79,7 +79,7 @@ window.SPOTS = [
       tideHint: "Revisar lagunas interiores con coeficiente alto.",
       notes: [
         "Top para freeride con Poniente.",
-        "Levante muy delicado fuera de zonas expertas.",
+        "Levante offshore y delicado.",
         "Muy apto para direccional."
       ]
     },
@@ -95,7 +95,7 @@ window.SPOTS = [
     featured: true,
     lat: 36.075,
     lon: -5.595,
-    ideal: "Poniente side-on 18-25 kn o Levante estable ya asentado.",
+    ideal: "Poniente side-on 18-25 kn o Levante estable asentado.",
     expert: {
       waveDirections: ["W", "SW", "E"],
       windGood: ["W", "SW", "E"],
@@ -125,7 +125,7 @@ window.SPOTS = [
     featured: false,
     lat: 36.170,
     lon: -5.430,
-    ideal: "Refugio con Levante fuerte en Tarifa y bajamar para agua plato.",
+    ideal: "Refugio con Levante fuerte y bajamar para agua muy plana.",
     expert: {
       waveDirections: ["E", "SE"],
       windGood: ["E", "SE"],
@@ -140,7 +140,7 @@ window.SPOTS = [
       notes: [
         "Refugio real para freestyle.",
         "Muy seguro por ángulo de viento.",
-        "Poco interés puro de ola, mucho interés de control."
+        "Poco interés puro de ola, mucho de control."
       ]
     },
     webcams: []
@@ -153,7 +153,7 @@ window.SPOTS = [
     featured: true,
     lat: 36.481,
     lon: -4.752,
-    ideal: "Swell E/SE 1.5-2m, 7-8s, Norte/NW terral y marea baja.",
+    ideal: "E/SE 1.5-2m, 7-8s, Norte/NW terral y marea baja.",
     expert: {
       waveDirections: ["E", "SE"],
       windGood: ["N", "NW"],
@@ -164,9 +164,9 @@ window.SPOTS = [
       periodOptimal: [7, 8],
       windMin: 4,
       windMax: 24,
-      tideHint: "Baja ayuda a conectar mejor la derecha.",
+      tideHint: "La baja ayuda a conectar mejor la derecha.",
       notes: [
-        "Derecha muy estética junto al espigón.",
+        "Derecha estética junto al espigón.",
         "Necesita energía suficiente.",
         "Muy buen spot cuando cuadra."
       ]
@@ -295,7 +295,7 @@ window.SPOTS = [
     featured: false,
     lat: 36.708,
     lon: -3.550,
-    ideal: "Poniente 18-25 kn con mar activo y buen chopi para rampas.",
+    ideal: "Poniente 18-25 kn con mar activo y buen chopi.",
     expert: {
       waveDirections: ["W", "SW"],
       windGood: ["W", "SW"],
