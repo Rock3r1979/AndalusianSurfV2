@@ -1,8 +1,9 @@
 (function () {
   const CFG = window.APP_CONFIG || {};
   const AEMET_API_KEY = CFG.AEMET_API_KEY || "";
-  const REQUEST_TIMEOUT_MS = CFG.REQUEST_TIMEOUT_MS || 15000;
   const USE_AEMET = CFG.USE_AEMET !== false;
+  const REQUEST_TIMEOUT_MS = CFG.REQUEST_TIMEOUT_MS || 15000;
+  const FORECAST_DAYS = CFG.FORECAST_DAYS || 15;
 
   async function fetchJson(url, options = {}) {
     const controller = new AbortController();
@@ -22,7 +23,8 @@
     url.searchParams.set("latitude", lat);
     url.searchParams.set("longitude", lon);
     url.searchParams.set("hourly", "wave_height,wave_direction,wave_period,sea_surface_temperature");
-    url.searchParams.set("forecast_days", "3");
+    url.searchParams.set("daily", "wave_height_max,wave_direction_dominant,wave_period_max,sea_surface_temperature_max");
+    url.searchParams.set("forecast_days", String(FORECAST_DAYS));
     url.searchParams.set("timezone", "Europe/Madrid");
     return url.toString();
   }
@@ -32,9 +34,46 @@
     url.searchParams.set("latitude", lat);
     url.searchParams.set("longitude", lon);
     url.searchParams.set("hourly", "temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m");
-    url.searchParams.set("forecast_days", "3");
+    url.searchParams.set("daily", "wind_speed_10m_max,wind_gusts_10m_max");
+    url.searchParams.set("forecast_days", String(FORECAST_DAYS));
     url.searchParams.set("timezone", "Europe/Madrid");
     return url.toString();
+  }
+
+  async function fetchAemetSupport() {
+    if (!USE_AEMET || !AEMET_API_KEY) return null;
+
+    try {
+      const endpoint = `https://opendata.aemet.es/opendata/api/prediccion/especifica/playa?api_key=${encodeURIComponent(AEMET_API_KEY)}`;
+      const meta = await fetchJson(endpoint);
+      if (!meta?.datos) return null;
+      return await fetchJson(meta.datos);
+    } catch (err) {
+      console.warn("AEMET no disponible", err);
+      return null;
+    }
+  }
+
+  function normalize(str) {
+    return String(str || "")
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .toLowerCase()
+      .trim();
+  }
+
+  function findAemetMatch(aemetPayload, spotName, province) {
+    if (!Array.isArray(aemetPayload)) return null;
+    const nSpot = normalize(spotName);
+    const nProv = normalize(province);
+
+    for (const item of aemetPayload) {
+      const nName = normalize(item.nombre || "");
+      const nProvince = normalize(item.provincia || "");
+      if (nName.includes(nSpot) || nSpot.includes(nName)) return item;
+      if (nProvince.includes(nProv)) return item;
+    }
+    return null;
   }
 
   function mergeHourly(marine, weather) {
@@ -56,50 +95,27 @@
         windGust: w.wind_gusts_10m?.[i] ?? null
       });
     }
-
     return rows;
   }
 
-  async function fetchAemetSupport() {
-    if (!USE_AEMET || !AEMET_API_KEY) return null;
+  function mergeDaily(marine, weather) {
+    const m = marine.daily || {};
+    const w = weather.daily || {};
+    const len = Math.min(m.time?.length || 0, w.time?.length || 0);
+    const rows = [];
 
-    try {
-      const endpoint = `https://opendata.aemet.es/opendata/api/prediccion/especifica/playa?api_key=${encodeURIComponent(AEMET_API_KEY)}`;
-      const meta = await fetchJson(endpoint);
-      if (!meta?.datos) return null;
-      const payload = await fetchJson(meta.datos);
-      return payload;
-    } catch (err) {
-      console.warn("AEMET no disponible:", err);
-      return null;
+    for (let i = 0; i < len; i++) {
+      rows.push({
+        date: m.time?.[i] ?? null,
+        waveHeightMax: m.wave_height_max?.[i] ?? null,
+        waveDirectionDominant: m.wave_direction_dominant?.[i] ?? null,
+        wavePeriodMax: m.wave_period_max?.[i] ?? null,
+        seaTempMax: m.sea_surface_temperature_max?.[i] ?? null,
+        windSpeedMax: w.wind_speed_10m_max?.[i] ?? null,
+        windGustMax: w.wind_gusts_10m_max?.[i] ?? null
+      });
     }
-  }
-
-  function findAemetMatch(aemetPayload, spotName, province) {
-    if (!Array.isArray(aemetPayload)) return null;
-    const normSpot = normalize(spotName);
-    const normProv = normalize(province);
-
-    let best = null;
-
-    for (const item of aemetPayload) {
-      const name = normalize(item.nombre || "");
-      const prov = normalize(item.provincia || "");
-      if (name.includes(normSpot) || normSpot.includes(name) || prov.includes(normProv)) {
-        best = item;
-        if (name.includes(normSpot)) break;
-      }
-    }
-
-    return best;
-  }
-
-  function normalize(str) {
-    return String(str || "")
-      .normalize("NFD")
-      .replace(/[̀-ͯ]/g, "")
-      .toLowerCase()
-      .trim();
+    return rows;
   }
 
   async function fetchSpotForecast(spot, aemetPayload) {
@@ -108,18 +124,16 @@
       fetchJson(buildWeatherUrl(spot.lat, spot.lon))
     ]);
 
-    const hourly = mergeHourly(marine, weather);
-    const aemet = findAemetMatch(aemetPayload, spot.name, spot.province);
-
     return {
-      current: hourly[0] || null,
-      hourly,
-      aemet
+      current: mergeHourly(marine, weather)[0] || null,
+      hourly: mergeHourly(marine, weather),
+      daily: mergeDaily(marine, weather),
+      aemet: findAemetMatch(aemetPayload, spot.name, spot.province)
     };
   }
 
   window.ApiService = {
-    fetchAemetSupport,
-    fetchSpotForecast
+    fetchSpotForecast,
+    fetchAemetSupport
   };
 })();
