@@ -8,7 +8,6 @@
   async function fetchJson(url, options = {}) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
-
     try {
       const res = await fetch(url, { ...options, signal: controller.signal });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -41,8 +40,7 @@
   }
 
   async function fetchAemetSupport() {
-    if (!USE_AEMET || !AEMET_API_KEY) return null;
-
+    if (!USE_AEMET || !AEMET_API_KEY || AEMET_API_KEY.includes("PEGA_AQUI")) return null;
     try {
       const endpoint = `https://opendata.aemet.es/opendata/api/prediccion/especifica/playa?api_key=${encodeURIComponent(AEMET_API_KEY)}`;
       const meta = await fetchJson(endpoint);
@@ -71,7 +69,7 @@
       const nName = normalize(item.nombre || "");
       const nProvince = normalize(item.provincia || "");
       if (nName.includes(nSpot) || nSpot.includes(nName)) return item;
-      if (nProvince.includes(nProv)) return item;
+      if (nProvince === nProv && nName.length > 3) return item;
     }
     return null;
   }
@@ -95,7 +93,9 @@
         windGust: w.wind_gusts_10m?.[i] ?? null
       });
     }
-    return rows;
+
+    const now = Date.now();
+    return rows.filter(r => new Date(r.time).getTime() >= now - 3600000);
   }
 
   function mergeDaily(marine, weather) {
@@ -124,9 +124,10 @@
       fetchJson(buildWeatherUrl(spot.lat, spot.lon))
     ]);
 
+    const hourly = mergeHourly(marine, weather);
     return {
-      current: mergeHourly(marine, weather)[0] || null,
-      hourly: mergeHourly(marine, weather),
+      current: hourly[0] || null,
+      hourly,
       daily: mergeDaily(marine, weather),
       aemet: findAemetMatch(aemetPayload, spot.name, spot.province)
     };
