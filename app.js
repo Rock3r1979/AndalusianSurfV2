@@ -2,7 +2,8 @@
   const SPOTS = window.SPOTS || [];
   const ApiService = window.ApiService;
   const ScoringEngine = window.ScoringEngine;
-  const MAX_HOURLY_CARDS = window.APP_CONFIG?.MAX_HOURLY_CARDS || 6;
+  const CFG = window.APP_CONFIG || {};
+  const HOURS_TO_SHOW = CFG.HOURS_TO_SHOW || 24;
 
   const state = {
     aemetPayload: null,
@@ -30,6 +31,7 @@
     statTotal: document.getElementById("statTotal"),
     statEpic: document.getElementById("statEpic"),
     statGood: document.getElementById("statGood"),
+    statPoor: document.getElementById("statPoor"),
     tpl: document.getElementById("spotCardTemplate")
   };
 
@@ -82,7 +84,7 @@
 
   async function loadAll() {
     try {
-      setStatus("loading", "Cargando Open-Meteo y AEMET...");
+      setStatus("loading", "Cargando forecasts reales...");
       state.aemetPayload = await ApiService.fetchAemetSupport();
 
       const results = await Promise.allSettled(
@@ -110,7 +112,8 @@
           scoreClass: "poor",
           analysis: ["Error al cargar este spot."],
           windowText: "Sin forecast.",
-          topHours: []
+          hourlyScored: [],
+          dailyScored: []
         };
       });
 
@@ -128,13 +131,6 @@
   function setStatus(type, text) {
     els.statusBox.className = `status status--${type}`;
     els.statusBox.textContent = text;
-  }
-
-  function render() {
-    const filtered = applyFilters([...state.enriched]);
-    renderStats(state.enriched);
-    renderRanking([...state.enriched].sort((a, b) => b.score - a.score).slice(0, 5));
-    renderCards(filtered);
   }
 
   function applyFilters(items) {
@@ -171,10 +167,18 @@
     return items;
   }
 
+  function render() {
+    const filtered = applyFilters([...state.enriched]);
+    renderStats(state.enriched);
+    renderRanking([...state.enriched].sort((a, b) => b.score - a.score).slice(0, 5));
+    renderCards(filtered);
+  }
+
   function renderStats(items) {
     els.statTotal.textContent = items.length;
     els.statEpic.textContent = items.filter(i => i.score >= 78).length;
     els.statGood.textContent = items.filter(i => i.score >= 58 && i.score < 78).length;
+    els.statPoor.textContent = items.filter(i => i.score < 58).length;
   }
 
   function renderRanking(items) {
@@ -194,7 +198,7 @@
     els.cardsGrid.innerHTML = "";
 
     if (!items.length) {
-      els.cardsGrid.innerHTML = `<div class="empty">No hay spots que coincidan con los filtros.</div>`;
+      els.cardsGrid.innerHTML = `<div class="panel">No hay spots que coincidan con los filtros.</div>`;
       return;
     }
 
@@ -220,58 +224,158 @@
       node.querySelector(".js-wind").textContent =
         item.current?.windSpeed != null ? `${Math.round(item.current.windSpeed)} km/h` : "-";
 
+      node.querySelector(".js-gust").textContent =
+        item.current?.windGust != null ? `${Math.round(item.current.windGust)} km/h` : "-";
+
       node.querySelector(".js-dir").textContent =
         item.current?.windDirection != null ? ScoringEngine.degToCompass(item.current.windDirection) : "-";
 
+      node.querySelector(".js-water").textContent =
+        item.current?.seaTemp != null ? `${item.current.seaTemp.toFixed(1)}ºC` : "-";
+
       node.querySelector(".js-window").textContent = item.windowText;
       node.querySelector(".js-ideal").textContent = item.ideal;
-      node.querySelector(".js-aemet").textContent = ScoringEngine.aemetText(item.aemet);
+      node.querySelector(".js-aemet").textContent = aemetText(item.aemet);
 
       const analysis = node.querySelector(".js-analysis");
-      item.analysis.concat(item.expert.notes).slice(0, 6).forEach(text => {
+      item.analysis.concat(item.expert.notes).slice(0, 8).forEach(text => {
         const li = document.createElement("li");
         li.textContent = text;
         analysis.appendChild(li);
       });
 
-      const webcams = node.querySelector(".js-webcams");
-      if (item.webcams?.length) {
-        item.webcams.forEach(cam => {
-          const a = document.createElement("a");
-          a.href = cam.url;
-          a.target = "_blank";
-          a.rel = "noopener noreferrer";
-          a.className = "webcam";
-          a.innerHTML = `
-            <span>${cam.title}<br><small>Abrir enlace</small></span>
-            <strong>↗</strong>
-          `;
-          webcams.appendChild(a);
-        });
-      } else {
-        webcams.innerHTML = `<p class="muted">Sin webcam registrada.</p>`;
-      }
+      renderHoursTable(node.querySelector(".js-hours-table tbody"), item.hourlyScored.slice(0, HOURS_TO_SHOW));
+      renderWindTable(node.querySelector(".js-wind-table tbody"), item.hourlyScored.slice(0, HOURS_TO_SHOW));
+      renderWindSummary(node.querySelector(".js-wind-summary"), item.hourlyScored.slice(0, HOURS_TO_SHOW));
+      renderDaysTable(node.querySelector(".js-days-table tbody"), item.dailyScored.slice(0, 15));
+      renderWebcams(node.querySelector(".js-webcams"), item.webcams);
 
-      const hours = node.querySelector(".js-hours");
-      if (item.topHours?.length) {
-        item.topHours.slice(0, MAX_HOURLY_CARDS).forEach(hour => {
-          const chip = document.createElement("div");
-          chip.className = "hour-chip";
-          chip.innerHTML = `
-            <span class="hour-chip__time">${ScoringEngine.formatHour(hour.time)}</span>
-            <span class="hour-chip__score">${hour.score}</span>
-            <span class="hour-chip__meta">${hour.waveHeight?.toFixed(1) ?? "-"}m · ${Math.round(hour.wavePeriod ?? 0)}s</span>
-          `;
-          hours.appendChild(chip);
-        });
-      } else {
-        hours.innerHTML = `<p class="muted">Sin horas destacables a corto plazo.</p>`;
-      }
-
+      bindTabs(node);
       frag.appendChild(node);
     });
 
     els.cardsGrid.appendChild(frag);
+  }
+
+  function renderHoursTable(tbody, hours) {
+    tbody.innerHTML = "";
+    hours.forEach(h => {
+      const tr = document.createElement("tr");
+      const scoreClass = h.score >= 78 ? "score-epic" : h.score >= 58 ? "score-good" : "score-poor";
+      tr.innerHTML = `
+        <td>${ScoringEngine.formatHour(h.time)}</td>
+        <td>${h.waveHeight != null ? h.waveHeight.toFixed(1) + "m" : "-"}</td>
+        <td>${h.wavePeriod != null ? Math.round(h.wavePeriod) + "s" : "-"}</td>
+        <td>${h.waveDirection != null ? ScoringEngine.degToCompass(h.waveDirection) : "-"}</td>
+        <td>${h.windSpeed != null ? Math.round(h.windSpeed) + " km/h" : "-"}</td>
+        <td>${h.windGust != null ? Math.round(h.windGust) + " km/h" : "-"}</td>
+        <td class="${scoreClass}">${h.score}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function renderWindTable(tbody, hours) {
+    tbody.innerHTML = "";
+    hours.forEach(h => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${ScoringEngine.formatHour(h.time)}</td>
+        <td>${h.windDirection != null ? ScoringEngine.degToCompass(h.windDirection) : "-"}</td>
+        <td>${h.windSpeed != null ? Math.round(h.windSpeed) + " km/h" : "-"}</td>
+        <td>${h.windGust != null ? Math.round(h.windGust) + " km/h" : "-"}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function renderWindSummary(container, hours) {
+    const winds = hours.map(h => h.windSpeed).filter(v => v != null);
+    const gusts = hours.map(h => h.windGust).filter(v => v != null);
+    const avgWind = winds.length ? winds.reduce((a,b) => a+b, 0) / winds.length : null;
+    const maxWind = winds.length ? Math.max(...winds) : null;
+    const avgGust = gusts.length ? gusts.reduce((a,b) => a+b, 0) / gusts.length : null;
+    const maxGust = gusts.length ? Math.max(...gusts) : null;
+
+    container.innerHTML = `
+      <div class="wind-box">
+        <span class="wind-box__label">Viento medio</span>
+        <span class="wind-box__value">${avgWind != null ? Math.round(avgWind) + " km/h" : "-"}</span>
+      </div>
+      <div class="wind-box">
+        <span class="wind-box__label">Viento máx</span>
+        <span class="wind-box__value">${maxWind != null ? Math.round(maxWind) + " km/h" : "-"}</span>
+      </div>
+      <div class="wind-box">
+        <span class="wind-box__label">Racha media</span>
+        <span class="wind-box__value">${avgGust != null ? Math.round(avgGust) + " km/h" : "-"}</span>
+      </div>
+      <div class="wind-box">
+        <span class="wind-box__label">Racha máx</span>
+        <span class="wind-box__value">${maxGust != null ? Math.round(maxGust) + " km/h" : "-"}</span>
+      </div>
+    `;
+  }
+
+  function renderDaysTable(tbody, days) {
+    tbody.innerHTML = "";
+    days.forEach(day => {
+      const cls = day.score >= 78 ? "score-epic" : day.score >= 58 ? "score-good" : "score-poor";
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${ScoringEngine.formatDay(day.date)}</td>
+        <td>${day.waveHeightMax != null ? day.waveHeightMax.toFixed(1) + "m" : "-"}</td>
+        <td>${day.wavePeriodMax != null ? Math.round(day.wavePeriodMax) + "s" : "-"}</td>
+        <td>${day.windSpeedMax != null ? Math.round(day.windSpeedMax) + " km/h" : "-"}</td>
+        <td>${day.windGustMax != null ? Math.round(day.windGustMax) + " km/h" : "-"}</td>
+        <td>${day.seaTempMax != null ? day.seaTempMax.toFixed(1) + "ºC" : "-"}</td>
+        <td class="${cls}">${day.score}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function renderWebcams(container, webcams) {
+    container.innerHTML = "";
+    if (!webcams?.length) {
+      container.innerHTML = `<p class="muted">Sin webcam registrada.</p>`;
+      return;
+    }
+
+    webcams.forEach(cam => {
+      const a = document.createElement("a");
+      a.href = cam.url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.className = "webcam";
+      a.innerHTML = `
+        <span>${cam.title}<br><small>Abrir enlace</small></span>
+        <strong>↗</strong>
+      `;
+      container.appendChild(a);
+    });
+  }
+
+  function bindTabs(card) {
+    const buttons = card.querySelectorAll(".tab-btn");
+    const panels = card.querySelectorAll(".tab-panel");
+
+    buttons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const target = btn.dataset.tab;
+        buttons.forEach(b => b.classList.remove("active"));
+        panels.forEach(p => p.classList.remove("active"));
+        btn.classList.add("active");
+        card.querySelector(`[data-panel="${target}"]`).classList.add("active");
+      });
+    });
+  }
+
+  function aemetText(aemet) {
+    if (!aemet) return "Sin apoyo AEMET para este spot.";
+    const nombre = aemet.nombre || "spot AEMET";
+    const cielo = aemet.estadoCielo || aemet.prediccion?.dia?.[0]?.estadoCieloDescriptivo || "dato disponible";
+    return `AEMET: ${nombre} · ${typeof cielo === "string" ? cielo : "dato disponible"}.`;
   }
 
   function labelSport(s) {
