@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Andalucía Surf Forecast Pro V3</title>
+  <title>Andalucía Surf Forecast Pro V3.1</title>
   <meta
     name="description"
     content="Forecast real y experto de surf, kitesurf, windsurf y wingfoil en Andalucía."
@@ -15,11 +15,10 @@
     <div class="brand">
       <div class="brand__flag" aria-hidden="true"></div>
       <div>
-        <h1>Andalucía Surf Forecast Pro V3</h1>
-        <p>15 días · viento y rachas · horas óptimas · datos reales</p>
+        <h1>Andalucía Surf Forecast Pro V3.1</h1>
+        <p>Compacta · móvil · 15 días · horas · viento y rachas</p>
       </div>
     </div>
-
     <div class="topbar__actions">
       <button id="refreshBtn" class="btn btn--primary" type="button">Actualizar</button>
     </div>
@@ -27,10 +26,9 @@
 
   <section class="hero">
     <div class="hero__text">
-      <h2>Forecast experto por spot</h2>
+      <h2>Forecast técnico por spot</h2>
       <p>
-        Open-Meteo Marine + Open-Meteo Forecast + AEMET como apoyo.
-        Más detalle horario, vista diaria y scoring experto por playa.
+        Resumen experto visible arriba y detalle desplegable solo cuando hace falta.
       </p>
     </div>
 
@@ -110,12 +108,12 @@
       </section>
 
       <section class="panel">
-        <h3>Cómo leerlo</h3>
+        <h3>Lectura rápida</h3>
         <ul class="bullet-list compact">
-          <li>Ola = altura estimada del mar en metros.</li>
-          <li>Periodo = segundos entre olas; más periodo suele significar más energía.</li>
-          <li>Viento = intensidad media; rachas = picos de viento.</li>
-          <li>Score = lectura experta del spot según dirección, tamaño, periodo y viento.</li>
+          <li>Ola = altura del mar estimada en metros.</li>
+          <li>Periodo = segundos entre olas.</li>
+          <li>Viento = media; racha = pico.</li>
+          <li>Score = compatibilidad entre mar, viento y spot.</li>
         </ul>
       </section>
     </aside>
@@ -135,13 +133,13 @@
         <div class="js-score badge"></div>
       </div>
 
-      <div class="metrics">
+      <div class="metrics metrics--compact">
         <div class="metric">
           <span class="metric__label">Ola</span>
           <strong class="metric__value js-wave">-</strong>
         </div>
         <div class="metric">
-          <span class="metric__label">Periodo</span>
+          <span class="metric__label">Per</span>
           <strong class="metric__value js-period">-</strong>
         </div>
         <div class="metric">
@@ -153,7 +151,7 @@
           <strong class="metric__value js-gust">-</strong>
         </div>
         <div class="metric">
-          <span class="metric__label">Dir viento</span>
+          <span class="metric__label">Dir</span>
           <strong class="metric__value js-dir">-</strong>
         </div>
         <div class="metric">
@@ -180,82 +178,106 @@
         <ul class="js-analysis bullet-list"></ul>
       </section>
 
-      <section class="block">
-        <h4>Apoyo AEMET</h4>
-        <p class="js-aemet block__text">Sin apoyo AEMET.</p>
-      </section>
-
-      <section class="tabs">
-        <button class="tab-btn active" data-tab="hours">Próximas horas</button>
-        <button class="tab-btn" data-tab="wind">Viento</button>
-        <button class="tab-btn" data-tab="days">15 días</button>
-        <button class="tab-btn" data-tab="cams">Webcams</button>
-      </section>
-
-      <section class="tab-panel active" data-panel="hours">
-        <div class="block">
-          <div class="hours-table-wrap">
-            <table class="table js-hours-table">
-              <thead>
-                <tr>
-                  <th>Hora</th>
-                  <th>Ola</th>
-                  <th>Per</th>
-                  <th>Dir ola</th>
-                  <th>Viento</th>
-                  <th>Racha</th>
-                  <th>Score</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
+      <section class="accordion js-aemet-wrap hidden">
+        <button class="accordion__btn" type="button" data-acc="aemet">
+          <span>Apoyo AEMET</span>
+          <span>+</span>
+        </button>
+        <div class="accordion__panel" data-panel="aemet">
+          <div class="block block--tight">
+            <p class="js-aemet block__text">-</p>
           </div>
         </div>
       </section>
 
-      <section class="tab-panel" data-panel="wind">
-        <div class="block">
-          <div class="wind-summary js-wind-summary"></div>
-          <div class="hours-table-wrap">
-            <table class="table js-wind-table">
-              <thead>
-                <tr>
-                  <th>Hora</th>
-                  <th>Dir</th>
-                  <th>Viento</th>
-                  <th>Racha</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
+      <section class="accordion">
+        <button class="accordion__btn" type="button" data-acc="hours">
+          <span>Próximas horas</span>
+          <span>+</span>
+        </button>
+        <div class="accordion__panel" data-panel="hours">
+          <div class="block block--tight">
+            <div class="table-wrap">
+              <table class="table js-hours-table">
+                <thead>
+                  <tr>
+                    <th>Hora</th>
+                    <th>Ola</th>
+                    <th>Per</th>
+                    <th>Dir</th>
+                    <th>Vto</th>
+                    <th>Racha</th>
+                    <th>Score</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
           </div>
         </div>
       </section>
 
-      <section class="tab-panel" data-panel="days">
-        <div class="block">
-          <div class="days-table-wrap">
-            <table class="table js-days-table">
-              <thead>
-                <tr>
-                  <th>Día</th>
-                  <th>Ola max</th>
-                  <th>Per max</th>
-                  <th>Viento max</th>
-                  <th>Racha max</th>
-                  <th>Agua</th>
-                  <th>Score día</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
+      <section class="accordion">
+        <button class="accordion__btn" type="button" data-acc="wind">
+          <span>Viento y rachas</span>
+          <span>+</span>
+        </button>
+        <div class="accordion__panel" data-panel="wind">
+          <div class="block block--tight">
+            <div class="wind-summary js-wind-summary"></div>
+            <div class="table-wrap">
+              <table class="table js-wind-table">
+                <thead>
+                  <tr>
+                    <th>Hora</th>
+                    <th>Dir</th>
+                    <th>Viento</th>
+                    <th>Racha</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
           </div>
         </div>
       </section>
 
-      <section class="tab-panel" data-panel="cams">
-        <div class="block">
-          <div class="js-webcams webcams"></div>
+      <section class="accordion">
+        <button class="accordion__btn" type="button" data-acc="days">
+          <span>15 días</span>
+          <span>+</span>
+        </button>
+        <div class="accordion__panel" data-panel="days">
+          <div class="block block--tight">
+            <div class="table-wrap">
+              <table class="table js-days-table">
+                <thead>
+                  <tr>
+                    <th>Día</th>
+                    <th>Ola</th>
+                    <th>Per</th>
+                    <th>Viento</th>
+                    <th>Racha</th>
+                    <th>Agua</th>
+                    <th>Score</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="accordion">
+        <button class="accordion__btn" type="button" data-acc="cams">
+          <span>Webcams</span>
+          <span>+</span>
+        </button>
+        <div class="accordion__panel" data-panel="cams">
+          <div class="block block--tight">
+            <div class="js-webcams webcams"></div>
+          </div>
         </div>
       </section>
     </article>
