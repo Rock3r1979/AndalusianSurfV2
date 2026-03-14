@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Andalucía Surf Forecast Pro</title>
+  <meta
+    name="description"
+    content="Forecast real y experto de surf, kitesurf, windsurf y wingfoil en Andalucía."
+  />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand__flag" aria-hidden="true"></div>
+      <div>
+        <h1>Andalucía Surf Forecast Pro</h1>
+        <p>Open-Meteo Marine + Open-Meteo Forecast + AEMET</p>
+      </div>
+    </div>
+    <div class="topbar__actions">
+      <button id="refreshBtn" class="btn btn--primary" type="button">Actualizar</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero__text">
+      <h2>Forecast técnico por spots</h2>
+      <p>
+        Lectura experta por playa con oleaje, periodo, dirección, viento, horas óptimas
+        y webcams.
+      </p>
+    </div>
+
+    <div class="hero__stats">
+      <article class="stat">
+        <span class="stat__value" id="statTotal">0</span>
+        <span class="stat__label">Spots</span>
+      </article>
+      <article class="stat">
+        <span class="stat__value" id="statEpic">0</span>
+        <span class="stat__label">Épicos</span>
+      </article>
+      <article class="stat">
+        <span class="stat__value" id="statGood">0</span>
+        <span class="stat__label">Buenos</span>
+      </article>
+    </div>
+  </section>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <section class="panel">
+        <h3>Filtros</h3>
+
+        <label class="field">
+          <span>Buscar</span>
+          <input id="searchInput" type="text" placeholder="El Palmar, Tarifa, Cabopino..." />
+        </label>
+
+        <label class="field">
+          <span>Provincia</span>
+          <select id="provinceSelect">
+            <option value="all">Todas</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Deporte</span>
+          <select id="sportSelect">
+            <option value="all">Todos</option>
+            <option value="surf">Surf</option>
+            <option value="kitesurf">Kitesurf</option>
+            <option value="windsurf">Windsurf</option>
+            <option value="wingfoil">Wingfoil</option>
+            <option value="sup">SUP</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Orden</span>
+          <select id="sortSelect">
+            <option value="score">Mejor score</option>
+            <option value="name">Nombre</option>
+            <option value="province">Provincia</option>
+          </select>
+        </label>
+
+        <label class="check">
+          <input id="featuredOnly" type="checkbox" />
+          <span>Solo destacados</span>
+        </label>
+      </section>
+
+      <section class="panel">
+        <h3>Estado</h3>
+        <div id="statusBox" class="status status--loading">Cargando datos...</div>
+        <p id="lastUpdate" class="muted">Sin actualizar</p>
+      </section>
+
+      <section class="panel">
+        <h3>Top spots</h3>
+        <div id="rankingList" class="ranking"></div>
+      </section>
+    </aside>
+
+    <section class="content">
+      <div id="cardsGrid" class="cards"></div>
+    </section>
+  </main>
+
+  <template id="spotCardTemplate">
+    <article class="card">
+      <div class="card__head">
+        <div>
+          <h3 class="js-name"></h3>
+          <p class="js-meta card__meta"></p>
+        </div>
+        <div class="js-score badge"></div>
+      </div>
+
+      <div class="metrics">
+        <div class="metric">
+          <span class="metric__label">Ola</span>
+          <strong class="metric__value js-wave">-</strong>
+        </div>
+        <div class="metric">
+          <span class="metric__label">Periodo</span>
+          <strong class="metric__value js-period">-</strong>
+        </div>
+        <div class="metric">
+          <span class="metric__label">Viento</span>
+          <strong class="metric__value js-wind">-</strong>
+        </div>
+        <div class="metric">
+          <span class="metric__label">Dirección</span>
+          <strong class="metric__value js-dir">-</strong>
+        </div>
+      </div>
+
+      <section class="block">
+        <h4>Mejor ventana</h4>
+        <p class="js-window block__text">-</p>
+      </section>
+
+      <section class="block">
+        <h4>Lectura experta</h4>
+        <ul class="js-analysis bullet-list"></ul>
+      </section>
+
+      <section class="block">
+        <h4>Condición ideal</h4>
+        <p class="js-ideal block__text"></p>
+      </section>
+
+      <section class="block">
+        <h4>Apoyo AEMET</h4>
+        <p class="js-aemet block__text">Sin dato AEMET.</p>
+      </section>
+
+      <section class="block">
+        <h4>Webcams</h4>
+        <div class="js-webcams webcams"></div>
+      </section>
+
+      <section class="block">
+        <h4>Próximas horas</h4>
+        <div class="js-hours hours-grid"></div>
+      </section>
+    </article>
+  </template>
+
+  <script src="./config.js"></script>
+  <script src="./spots.js"></script>
+  <script src="./services.js"></script>
+  <script src="./scoring.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
