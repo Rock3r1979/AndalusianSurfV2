@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Andalucía Surf Forecast Pro</title>
+  <title>Andalucía Surf Forecast Pro V3</title>
   <meta
     name="description"
     content="Forecast real y experto de surf, kitesurf, windsurf y wingfoil en Andalucía."
@@ -15,10 +15,11 @@
     <div class="brand">
       <div class="brand__flag" aria-hidden="true"></div>
       <div>
-        <h1>Andalucía Surf Forecast Pro</h1>
-        <p>Open-Meteo Marine + Open-Meteo Forecast + AEMET</p>
+        <h1>Andalucía Surf Forecast Pro V3</h1>
+        <p>15 días · viento y rachas · horas óptimas · datos reales</p>
       </div>
     </div>
+
     <div class="topbar__actions">
       <button id="refreshBtn" class="btn btn--primary" type="button">Actualizar</button>
     </div>
@@ -26,10 +27,10 @@
 
   <section class="hero">
     <div class="hero__text">
-      <h2>Forecast técnico por spots</h2>
+      <h2>Forecast experto por spot</h2>
       <p>
-        Lectura experta por playa con oleaje, periodo, dirección, viento, horas óptimas
-        y webcams.
+        Open-Meteo Marine + Open-Meteo Forecast + AEMET como apoyo.
+        Más detalle horario, vista diaria y scoring experto por playa.
       </p>
     </div>
 
@@ -45,6 +46,10 @@
       <article class="stat">
         <span class="stat__value" id="statGood">0</span>
         <span class="stat__label">Buenos</span>
+      </article>
+      <article class="stat">
+        <span class="stat__value" id="statPoor">0</span>
+        <span class="stat__label">Flojos</span>
       </article>
     </div>
   </section>
@@ -103,6 +108,16 @@
         <h3>Top spots</h3>
         <div id="rankingList" class="ranking"></div>
       </section>
+
+      <section class="panel">
+        <h3>Cómo leerlo</h3>
+        <ul class="bullet-list compact">
+          <li>Ola = altura estimada del mar en metros.</li>
+          <li>Periodo = segundos entre olas; más periodo suele significar más energía.</li>
+          <li>Viento = intensidad media; rachas = picos de viento.</li>
+          <li>Score = lectura experta del spot según dirección, tamaño, periodo y viento.</li>
+        </ul>
+      </section>
     </aside>
 
     <section class="content">
@@ -134,14 +149,30 @@
           <strong class="metric__value js-wind">-</strong>
         </div>
         <div class="metric">
-          <span class="metric__label">Dirección</span>
+          <span class="metric__label">Racha</span>
+          <strong class="metric__value js-gust">-</strong>
+        </div>
+        <div class="metric">
+          <span class="metric__label">Dir viento</span>
           <strong class="metric__value js-dir">-</strong>
+        </div>
+        <div class="metric">
+          <span class="metric__label">Agua</span>
+          <strong class="metric__value js-water">-</strong>
         </div>
       </div>
 
-      <section class="block">
-        <h4>Mejor ventana</h4>
-        <p class="js-window block__text">-</p>
+      <section class="block block--summary">
+        <div class="summary-grid">
+          <div>
+            <h4>Mejor ventana</h4>
+            <p class="js-window block__text">-</p>
+          </div>
+          <div>
+            <h4>Condición ideal</h4>
+            <p class="js-ideal block__text">-</p>
+          </div>
+        </div>
       </section>
 
       <section class="block">
@@ -150,23 +181,82 @@
       </section>
 
       <section class="block">
-        <h4>Condición ideal</h4>
-        <p class="js-ideal block__text"></p>
-      </section>
-
-      <section class="block">
         <h4>Apoyo AEMET</h4>
-        <p class="js-aemet block__text">Sin dato AEMET.</p>
+        <p class="js-aemet block__text">Sin apoyo AEMET.</p>
       </section>
 
-      <section class="block">
-        <h4>Webcams</h4>
-        <div class="js-webcams webcams"></div>
+      <section class="tabs">
+        <button class="tab-btn active" data-tab="hours">Próximas horas</button>
+        <button class="tab-btn" data-tab="wind">Viento</button>
+        <button class="tab-btn" data-tab="days">15 días</button>
+        <button class="tab-btn" data-tab="cams">Webcams</button>
       </section>
 
-      <section class="block">
-        <h4>Próximas horas</h4>
-        <div class="js-hours hours-grid"></div>
+      <section class="tab-panel active" data-panel="hours">
+        <div class="block">
+          <div class="hours-table-wrap">
+            <table class="table js-hours-table">
+              <thead>
+                <tr>
+                  <th>Hora</th>
+                  <th>Ola</th>
+                  <th>Per</th>
+                  <th>Dir ola</th>
+                  <th>Viento</th>
+                  <th>Racha</th>
+                  <th>Score</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="tab-panel" data-panel="wind">
+        <div class="block">
+          <div class="wind-summary js-wind-summary"></div>
+          <div class="hours-table-wrap">
+            <table class="table js-wind-table">
+              <thead>
+                <tr>
+                  <th>Hora</th>
+                  <th>Dir</th>
+                  <th>Viento</th>
+                  <th>Racha</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="tab-panel" data-panel="days">
+        <div class="block">
+          <div class="days-table-wrap">
+            <table class="table js-days-table">
+              <thead>
+                <tr>
+                  <th>Día</th>
+                  <th>Ola max</th>
+                  <th>Per max</th>
+                  <th>Viento max</th>
+                  <th>Racha max</th>
+                  <th>Agua</th>
+                  <th>Score día</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="tab-panel" data-panel="cams">
+        <div class="block">
+          <div class="js-webcams webcams"></div>
+        </div>
       </section>
     </article>
   </template>
